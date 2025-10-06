@@ -1,7 +1,7 @@
 
 pipeline_name: PP-StructureV3
 
-batch_size: 8
+batch_size: 16
 
 use_doc_preprocessor: False
 use_seal_recognition: False
@@ -10,12 +10,15 @@ use_formula_recognition: True
 use_chart_recognition: False
 use_region_detection: True
 
+Global:
+  device: "gpu:0,1,2,3"
+
 SubModules:
   LayoutDetection:
     module_name: layout_detection
     model_name: PP-DocLayout_plus-L
     model_dir: null
-    batch_size: 8
+    batch_size: 16
     threshold: 
       0: 0.3  # paragraph_title
       1: 0.5  # image
@@ -75,7 +78,7 @@ SubModules:
 SubPipelines:
   DocPreprocessor:
     pipeline_name: doc_preprocessor
-    batch_size: 8
+    batch_size: 16
     use_doc_orientation_classify: True
     use_doc_unwarping: True
     SubModules:
@@ -83,7 +86,7 @@ SubPipelines:
         module_name: doc_text_orientation
         model_name: PP-LCNet_x1_0_doc_ori
         model_dir: null
-        batch_size: 8
+        batch_size: 16
       DocUnwarping:
         module_name: image_unwarping
         model_name: UVDoc
@@ -91,7 +94,7 @@ SubPipelines:
 
   GeneralOCR:
     pipeline_name: OCR
-    batch_size: 8
+    batch_size: 16
     text_type: general
     use_doc_preprocessor: False
     use_textline_orientation: True
@@ -111,12 +114,12 @@ SubPipelines:
         module_name: textline_orientation
         model_name: PP-LCNet_x1_0_textline_ori
         model_dir: null
-        batch_size: 8
+        batch_size: 16
       TextRecognition:
         module_name: text_recognition
-        model_name: PP-OCRv5_server_rec
+        model_name: en_PP-OCRv4_mobile_rec
         model_dir: null
-        batch_size: 8
+        batch_size: 16
         score_thresh: 0.0
         backend: tensorrt
  
@@ -177,23 +180,23 @@ SubPipelines:
             module_name: textline_orientation
             model_name: PP-LCNet_x1_0_textline_ori
             model_dir: null
-            batch_size: 8
+            batch_size: 16
           TextRecognition:
             module_name: text_recognition
-            model_name: PP-OCRv5_server_rec
+            model_name: en_PP-OCRv4_mobile_rec
             model_dir: null
-            batch_size: 8
+            batch_size: 16
         score_thresh: 0.0
 
   SealRecognition:
     pipeline_name: seal_recognition
-    batch_size: 8
+    batch_size: 16
     use_layout_detection: False
     use_doc_preprocessor: False
     SubPipelines:
       SealOCR:
         pipeline_name: OCR
-        batch_size: 8
+        batch_size: 16
         text_type: seal
         use_doc_preprocessor: False
         use_textline_orientation: False
@@ -210,14 +213,14 @@ SubPipelines:
             unclip_ratio: 0.5
           TextRecognition:
             module_name: text_recognition
-            model_name: PP-OCRv5_server_rec
+            model_name: en_PP-OCRv4_mobile_rec
             model_dir: null
-            batch_size: 8
+            batch_size: 16
             score_thresh: 0
     
   FormulaRecognition:
     pipeline_name: formula_recognition
-    batch_size: 8
+    batch_size: 16
     use_layout_detection: False
     use_doc_preprocessor: False
     SubModules:
@@ -225,4 +228,5 @@ SubPipelines:
         module_name: formula_recognition
         model_name: PP-FormulaNet_plus-L
         model_dir: null
-        batch_size: 8
+        batch_size: 16
+
